@@ -1,0 +1,125 @@
+\usepackage{fontspec}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{pgfkeys}
+\usepackage{pgffor}
+\usepackage[
+    left=1.4cm,
+    right=1.4cm,
+    top=2cm,
+    bottom=1cm,
+    paperwidth=17cm,
+    paperheight=24cm]{geometry}
+\setmainfont{Georgia}[
+    Path=./fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Italic,
+    BoldFont=*-Bold,
+    BoldItalicFont=*-BoldItalic
+]
+\pagenumbering{gobble} % Remove page numbers
+
+\newcommand{\RuGtitle}[1]{
+    \newcommand{\@RuGtitle}{
+        \begin{minipage}[c][5.5cm]{0.9\linewidth}
+            \centering
+            \huge \textbf{#1}
+        \end{minipage}
+    }
+}
+
+\newcommand{\RuGrector}[1]{
+    \newcommand{\@RuGrector}{
+        \begin{minipage}[c][4cm]{\linewidth}
+            \centering
+            \footnotesize
+            to obtain the degree of PhD of the \\
+            University of Groningen \\
+            on the authority of the \\
+            Rector Magnificus #1 \\
+            and in accordance with \\
+            the decision by the College of Deans. \\
+            \vspace{0.4cm}
+            This thesis will be defended in public on \\
+            \vspace{0.4cm}
+            Tuesday 5 November 2025 at 16.45 hours
+        \end{minipage}
+    }
+}
+
+\newcommand{\RuGcandidate}[2]{
+    \newcommand{\@RuGcandidate}{
+        \begin{minipage}[t][2cm]{\linewidth}
+            \centering
+            \large \textbf{#1} \\
+            \vspace{0.4cm}
+            \footnotesize born on #2
+        \end{minipage}
+    }
+}
+
+\newcommand{\@RuGsupervisorslist}{}
+
+\newcommand{\RuGsupervisor}[1]{
+    \typeout{\@RuGsupervisorslist}
+    % \if\@RuGsupervisorslist\empty
+    %     \renewcommand{\@RuGsupervisorslist}{#1}
+    % \else
+        \renewcommand{\@RuGsupervisorslist}{\expandafter\@RuGsupervisorslist #1 \\}
+    % \fi
+}
+
+
+\newcounter{cosupervisors}
+\newcounter{assessors}
+
+% \newcommand{\RuGsupervisor}[1]{
+%     \stepcounter{supervisors}
+%     \newcommand{\expandafter\@supervisorslist\value{supervisors}}{#1}
+% }
+
+% \newcommand{\@printRuGsupervisors}{
+%     \ifnum\value{supervisors}>0
+%         \textbf{Supervisor(s)} \\
+%         \foreach \n in {1,...,\value{supervisors}} {
+%             KV@members@\n
+%         }
+%         \\[\baselineskip]
+%     \fi
+% }
+
+\newcommand{\makeRuGtitlepage}{
+    \includegraphics[width=6cm]{logo.eps}
+    \begin{center}
+        \@RuGtitle
+
+        \begin{minipage}[c][3.75cm]{\linewidth}
+            \centering
+            \large \textbf{PhD thesis}
+        \end{minipage}
+
+        \@RuGrector
+
+        \begin{minipage}[c][3cm]{\linewidth}
+            \centering
+            \footnotesize
+            by
+        \end{minipage}
+        
+        \vspace{0.3cm}
+
+        \@RuGcandidate
+    
+    \newpage
+
+        
+    % \begin{minipage}{0.9\linewidth}
+    %     \raggedright
+    %     \footnotesize
+
+    %     \textbf{Supervisor(s)} \\
+    %     \@RuGsupervisorslist
+    % \end{minipage}
+    \end{center}
+}
