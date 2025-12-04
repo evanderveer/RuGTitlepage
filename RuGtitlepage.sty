@@ -1,8 +1,8 @@
-\usepackage{fontspec}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{pgfkeys}
 \usepackage{pgffor}
+\usepackage{datetime}
 \usepackage[
     left=1.4cm,
     right=1.4cm,
@@ -10,6 +10,10 @@
     bottom=1cm,
     paperwidth=17cm,
     paperheight=24cm]{geometry}
+\usepackage{iftex}
+
+\ifXeTeX
+\usepackage{fontspec}
 \setmainfont{Georgia}[
     Path=./fonts/,
     Extension=.ttf,
@@ -18,7 +22,12 @@
     BoldFont=*-Bold,
     BoldItalicFont=*-BoldItalic
 ]
+\fi
+
 \pagenumbering{gobble} % Remove page numbers
+
+\renewcommand{\dateseparator}{-}
+\settimeformat{xxivtime}
 
 \newcommand{\RuGtitle}[1]{
     \newcommand{\@RuGtitle}{
@@ -27,6 +36,10 @@
             \huge \textbf{#1}
         \end{minipage}
     }
+}
+
+\newcommand{\RuGdefensedate}[5]{
+    \newcommand{\@RuGdefensedate}{\dayofweekname{#1}{#2}{#3} #1 \monthname[#2] {#3} at \formattime{#4}{#5}{0} hours}
 }
 
 \newcommand{\RuGrector}[1]{
@@ -43,51 +56,51 @@
             \vspace{0.4cm}
             This thesis will be defended in public on \\
             \vspace{0.4cm}
-            Tuesday 5 November 2025 at 16.45 hours
+            \@RuGdefensedate
         \end{minipage}
     }
 }
 
-\newcommand{\RuGcandidate}[2]{
+\newcommand{\RuGcandidate}[4]{
     \newcommand{\@RuGcandidate}{
         \begin{minipage}[t][2cm]{\linewidth}
             \centering
             \large \textbf{#1} \\
             \vspace{0.4cm}
-            \footnotesize born on #2
+            \footnotesize born on #2 \monthname[#3] #4
         \end{minipage}
     }
 }
 
-\newcommand{\@RuGsupervisorslist}{}
-
-\newcommand{\RuGsupervisor}[1]{
-    \typeout{\@RuGsupervisorslist}
-    % \if\@RuGsupervisorslist\empty
-    %     \renewcommand{\@RuGsupervisorslist}{#1}
-    % \else
-        \renewcommand{\@RuGsupervisorslist}{\expandafter\@RuGsupervisorslist #1 \\}
-    % \fi
-}
-
-
-\newcounter{cosupervisors}
-\newcounter{assessors}
+% \newcommand{\@RuGsupervisorslist}{}
 
 % \newcommand{\RuGsupervisor}[1]{
-%     \stepcounter{supervisors}
-%     \newcommand{\expandafter\@supervisorslist\value{supervisors}}{#1}
+%     \typeout{\@RuGsupervisorslist}
+%     % \if\@RuGsupervisorslist\empty
+%     %     \renewcommand{\@RuGsupervisorslist}{#1}
+%     % \else
+%         \renewcommand{\@RuGsupervisorslist}{\expandafter\@RuGsupervisorslist #1 \\}
+%     % \fi
 % }
 
-% \newcommand{\@printRuGsupervisors}{
-%     \ifnum\value{supervisors}>0
-%         \textbf{Supervisor(s)} \\
-%         \foreach \n in {1,...,\value{supervisors}} {
-%             KV@members@\n
-%         }
-%         \\[\baselineskip]
-%     \fi
-% }
+
+% \newcounter{cosupervisors}
+% \newcounter{assessors}
+
+% % \newcommand{\RuGsupervisor}[1]{
+% %     \stepcounter{supervisors}
+% %     \newcommand{\expandafter\@supervisorslist\value{supervisors}}{#1}
+% % }
+
+% % \newcommand{\@printRuGsupervisors}{
+% %     \ifnum\value{supervisors}>0
+% %         \textbf{Supervisor(s)} \\
+% %         \foreach \n in {1,...,\value{supervisors}} {
+% %             KV@members@\n
+% %         }
+% %         \\[\baselineskip]
+% %     \fi
+% % }
 
 \newcommand{\makeRuGtitlepage}{
     \includegraphics[width=6cm]{logo.eps}
