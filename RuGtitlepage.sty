@@ -72,35 +72,68 @@
     }
 }
 
-% \newcommand{\@RuGsupervisorslist}{}
+% =============================================================================
+% Committee Members Management
+% =============================================================================
 
-% \newcommand{\RuGsupervisor}[1]{
-%     \typeout{\@RuGsupervisorslist}
-%     % \if\@RuGsupervisorslist\empty
-%     %     \renewcommand{\@RuGsupervisorslist}{#1}
-%     % \else
-%         \renewcommand{\@RuGsupervisorslist}{\expandafter\@RuGsupervisorslist #1 \\}
-%     % \fi
-% }
+% Initialize empty lists for committee members
+\newcommand{\@RuGsupervisors}{}
+\newcommand{\@RuGcosupervisors}{}
+\newcommand{\@RuGassessors}{}
 
+% Commands to add members to each list
+\newcommand{\RuGsupervisor}[1]{%
+    \listadd{\@RuGsupervisors}{#1}%
+}
 
-% \newcounter{cosupervisors}
-% \newcounter{assessors}
+\newcommand{\RuGcosupervisor}[1]{%
+    \listadd{\@RuGcosupervisors}{#1}%
+}
 
-% % \newcommand{\RuGsupervisor}[1]{
-% %     \stepcounter{supervisors}
-% %     \newcommand{\expandafter\@supervisorslist\value{supervisors}}{#1}
-% % }
+\newcommand{\RuGassessor}[1]{%
+    \listadd{\@RuGassessors}{#1}%
+}
 
-% % \newcommand{\@printRuGsupervisors}{
-% %     \ifnum\value{supervisors}>0
-% %         \textbf{Supervisor(s)} \\
-% %         \foreach \n in {1,...,\value{supervisors}} {
-% %             KV@members@\n
-% %         }
-% %         \\[\baselineskip]
-% %     \fi
-% % }
+% Helper command to print a list with separators
+\newcommand{\@RuGprintlist}[2]{%
+    % #1 = list macro name
+    % #2 = separator between items
+    \let\@RuGlistsep\relax
+    \renewcommand{\do}[1]{%
+        \@RuGlistsep
+        ##1%
+        \def\@RuGlistsep{#2}%
+    }%
+    \dolistloop{#1}%
+}
+
+% Command to typeset the committee members
+\newcommand{\makeRuGcommittee}{%
+    \begin{minipage}{0.9\linewidth}
+        \raggedright
+        \footnotesize
+
+        % Print supervisors section
+        \ifdefempty{\@RuGsupervisors}{}{%
+            \textbf{Supervisor(s)} \\
+            \@RuGprintlist{\@RuGsupervisors}{\\}%
+            \\[\baselineskip]%
+        }
+
+        % Print co-supervisors section
+        \ifdefempty{\@RuGcosupervisors}{}{%
+            \textbf{Co-supervisor(s)} \\
+            \@RuGprintlist{\@RuGcosupervisors}{\\}%
+            \\[\baselineskip]%
+        }
+
+        % Print assessment committee section
+        \ifdefempty{\@RuGassessors}{}{%
+            \textbf{Assessment Committee} \\
+            \@RuGprintlist{\@RuGassessors}{\\}%
+        }
+    \end{minipage}
+}
 
 \newcommand{\makeRuGtitlepage}{
     \includegraphics[width=6cm]{logo.eps}
@@ -123,16 +156,5 @@
         \vspace{0.3cm}
 
         \@RuGcandidate
-    
-    \newpage
-
-        
-    % \begin{minipage}{0.9\linewidth}
-    %     \raggedright
-    %     \footnotesize
-
-    %     \textbf{Supervisor(s)} \\
-    %     \@RuGsupervisorslist
-    % \end{minipage}
     \end{center}
 }

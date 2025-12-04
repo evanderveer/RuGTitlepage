@@ -7,27 +7,20 @@
 \RuGtitle{This is my \LaTeX\ title page}
 \RuGrector{Prof. Dr. A. Smith}
 \RuGdefensedate{1}{1}{2000}{9}{00}
-\RuGcandidate{John Doe}{1}{1}{1975} 
-\makeRuGtitlepage
+\RuGcandidate{John Doe}{1}{1}{1975}
 
+% Add committee members
+\RuGsupervisor{Prof. Dr. A. B}
+\RuGcosupervisor{Dr. C. D}
+\RuGassessor{Prof. Dr. E. F}
+\RuGassessor{Prof. Dr. G. H}
+\RuGassessor{Prof. Dr. I. J}
+
+\makeRuGtitlepage
 
 \newpage
 
-\begin{minipage}{0.9\linewidth}
-    \raggedright
-    \footnotesize
-
-    \textbf{Supervisor(s)} \\
-    Prof. Dr. A. B \\[\baselineskip]
-    
-    \textbf{Co-supervisor(s)} \\
-    Dr. G. R. C. D \\[\baselineskip]
-    
-    \textbf{Assessment Committee} \\
-    Prof. Dr. A. B \\
-    Prof. Dr. C. D \\
-    Prof. Dr. E. F \\
-\end{minipage}
+\makeRuGcommittee
 
   
 \end{document}

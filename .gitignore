@@ -17,4 +17,5 @@
 *.xdv*
 *synctex*
 */Thumbs.db
+.claude
 titlepage.pdf
