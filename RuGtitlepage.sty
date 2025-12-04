@@ -1,3 +1,6 @@
+% =============================================================================
+% Package Dependencies
+% =============================================================================
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{pgfkeys}
@@ -9,41 +12,60 @@
     top=2cm,
     bottom=1cm,
     paperwidth=17cm,
-    paperheight=24cm]{geometry}
+    paperheight=24cm
+]{geometry}
 \usepackage{iftex}
 
+% =============================================================================
+% Font Configuration (XeTeX only)
+% =============================================================================
 \ifXeTeX
-\usepackage{fontspec}
-\setmainfont{Georgia}[
-    Path=./fonts/,
-    Extension=.ttf,
-    UprightFont=*-Regular,
-    ItalicFont=*-Italic,
-    BoldFont=*-Bold,
-    BoldItalicFont=*-BoldItalic
-]
+    \usepackage{fontspec}
+    \setmainfont{Georgia}[
+        Path=./fonts/,
+        Extension=.ttf,
+        UprightFont=*-Regular,
+        ItalicFont=*-Italic,
+        BoldFont=*-Bold,
+        BoldItalicFont=*-BoldItalic
+    ]
 \fi
 
-\pagenumbering{gobble} % Remove page numbers
+% =============================================================================
+% Page Setup
+% =============================================================================
+\pagenumbering{gobble}              % Remove page numbers
+\renewcommand{\dateseparator}{-}    % Date format: YYYY-MM-DD
+\settimeformat{xxivtime}            % 24-hour time format
 
-\renewcommand{\dateseparator}{-}
-\settimeformat{xxivtime}
+% =============================================================================
+% Title Page Configuration Commands
+% =============================================================================
 
-\newcommand{\RuGtitle}[1]{
-    \newcommand{\@RuGtitle}{
+% Set the thesis title
+% Usage: \RuGtitle{Your Thesis Title}
+\newcommand{\RuGtitle}[1]{%
+    \newcommand{\@RuGtitle}{%
         \begin{minipage}[c][5.5cm]{0.9\linewidth}
             \centering
-            \huge \textbf{#1}
+            \huge\textbf{#1}
         \end{minipage}
-    }
+    }%
 }
 
-\newcommand{\RuGdefensedate}[5]{
-    \newcommand{\@RuGdefensedate}{\dayofweekname{#1}{#2}{#3} #1 \monthname[#2] {#3} at \formattime{#4}{#5}{0} hours}
+% Set the defense date with automatic day-of-week calculation
+% Usage: \RuGdefensedate{day}{month}{year}{hour}{minute}
+% Example: \RuGdefensedate{15}{6}{2026}{14}{00}
+\newcommand{\RuGdefensedate}[5]{%
+    \newcommand{\@RuGdefensedate}{
+        \dayofweekname{#1}{#2}{#3} #1 \monthname[#2] #3 at \formattime{#4}{#5}{0} hours%
+    }%
 }
 
-\newcommand{\RuGrector}[1]{
-    \newcommand{\@RuGrector}{
+% Set the Rector Magnificus name
+% Usage: \RuGrector{Prof. Dr. Name}
+\newcommand{\RuGrector}[1]{%
+    \newcommand{\@RuGrector}{%
         \begin{minipage}[c][4cm]{\linewidth}
             \centering
             \footnotesize
@@ -58,18 +80,21 @@
             \vspace{0.4cm}
             \@RuGdefensedate
         \end{minipage}
-    }
+    }%
 }
 
-\newcommand{\RuGcandidate}[4]{
-    \newcommand{\@RuGcandidate}{
+% Set the candidate information
+% Usage: \RuGcandidate{name}{day}{month}{year}
+% Example: \RuGcandidate{John Doe}{15}{3}{1990}
+\newcommand{\RuGcandidate}[4]{%
+    \newcommand{\@RuGcandidate}{%
         \begin{minipage}[t][2cm]{\linewidth}
             \centering
-            \large \textbf{#1} \\
+            \large\textbf{#1} \\
             \vspace{0.4cm}
             \footnotesize born on #2 \monthname[#3] #4
         \end{minipage}
-    }
+    }%
 }
 
 % =============================================================================
@@ -81,23 +106,26 @@
 \newcommand{\@RuGcosupervisors}{}
 \newcommand{\@RuGassessors}{}
 
-% Commands to add members to each list
+% Add a supervisor (can be called multiple times)
+% Usage: \RuGsupervisor{Prof. Dr. Name}
 \newcommand{\RuGsupervisor}[1]{%
     \listadd{\@RuGsupervisors}{#1}%
 }
 
+% Add a co-supervisor (can be called multiple times)
+% Usage: \RuGcosupervisor{Dr. Name}
 \newcommand{\RuGcosupervisor}[1]{%
     \listadd{\@RuGcosupervisors}{#1}%
 }
 
+% Add an assessment committee member (can be called multiple times)
+% Usage: \RuGassessor{Prof. Dr. Name}
 \newcommand{\RuGassessor}[1]{%
     \listadd{\@RuGassessors}{#1}%
 }
 
-% Helper command to print a list with separators
+% Helper: Print a list with separators between items (not after last item)
 \newcommand{\@RuGprintlist}[2]{%
-    % #1 = list macro name
-    % #2 = separator between items
     \let\@RuGlistsep\relax
     \renewcommand{\do}[1]{%
         \@RuGlistsep
@@ -107,54 +135,67 @@
     \dolistloop{#1}%
 }
 
-% Command to typeset the committee members
+% Typeset all committee members
+% Usage: \makeRuGcommittee
 \newcommand{\makeRuGcommittee}{%
     \begin{minipage}{0.9\linewidth}
         \raggedright
         \footnotesize
-
-        % Print supervisors section
+        %
+        % Supervisors section
         \ifdefempty{\@RuGsupervisors}{}{%
             \textbf{Supervisor(s)} \\
             \@RuGprintlist{\@RuGsupervisors}{\\}%
             \\[\baselineskip]%
-        }
-
-        % Print co-supervisors section
+        }%
+        %
+        % Co-supervisors section
         \ifdefempty{\@RuGcosupervisors}{}{%
             \textbf{Co-supervisor(s)} \\
             \@RuGprintlist{\@RuGcosupervisors}{\\}%
             \\[\baselineskip]%
-        }
-
-        % Print assessment committee section
+        }%
+        %
+        % Assessment committee section
         \ifdefempty{\@RuGassessors}{}{%
             \textbf{Assessment Committee} \\
             \@RuGprintlist{\@RuGassessors}{\\}%
-        }
-    \end{minipage}
+        }%
+    \end{minipage}%
 }
 
-\newcommand{\makeRuGtitlepage}{
+% =============================================================================
+% Title Page Generation
+% =============================================================================
+
+% Generate the complete title page
+% Usage: \makeRuGtitlepage
+% Note: Must be called after setting title, rector, defense date, and candidate
+\newcommand{\makeRuGtitlepage}{%
     \includegraphics[width=6cm]{logo.eps}
     \begin{center}
+        % Thesis title (5.5cm minipage)
         \@RuGtitle
 
+        % "PhD thesis" text (3.75cm minipage)
         \begin{minipage}[c][3.75cm]{\linewidth}
             \centering
-            \large \textbf{PhD thesis}
+            \large\textbf{PhD thesis}
         \end{minipage}
 
+        % Rector and defense information (4cm minipage)
         \@RuGrector
 
+        % "by" separator (3cm minipage)
         \begin{minipage}[c][3cm]{\linewidth}
             \centering
             \footnotesize
             by
         \end{minipage}
-        
+
         \vspace{0.3cm}
 
+        % Candidate information (2cm minipage)
         \@RuGcandidate
-    \end{center}
+    \end{center}%
 }
