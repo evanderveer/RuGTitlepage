@@ -23,7 +23,7 @@
 .claude
 
 # Generated output
-titlepage.pdf
+*.pdf
 
 # Font files (optional - exclude to avoid license issues)
 # Uncomment the line below if you want to exclude local fonts
