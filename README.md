@@ -5,11 +5,7 @@ A LaTeX package for generating PhD thesis title pages formatted according to Uni
 ## Features
 
 - Automatic title page generation with university branding
-- Custom page dimensions (17cm × 24cm)
-- Dynamic defense date formatting with automatic day-of-week calculation
-- Flexible committee member management (supervisors, co-supervisors, assessment committee)
-- Conditional rendering of sections (only shows sections with content)
-- Georgia font family integration for formal academic appearance
+- Correct page dimensions (17cm × 24cm)
 - XeLaTeX required for correct font rendering (pdfLaTeX fallback for testing only)
 - **Automatic system font detection** - uses Georgia from system fonts if available
 - Helpful error messages when fonts are missing
@@ -26,7 +22,7 @@ A LaTeX package for generating PhD thesis title pages formatted according to Uni
 - `fontspec` - Font management (XeTeX only)
 
 ### Files Required
-- `logo.eps` or `logo.pdf` - University of Groningen logo
+- `logo.eps` - University of Groningen logo
 
 ### Fonts Required
 - **Georgia font family** (automatically detected from system or local directory)
@@ -272,7 +268,7 @@ Generates the committee members page. Typically called on a new page after the t
 ## Layout Specifications
 
 ### Page Dimensions
-- **Paper size:** 17cm × 24cm (custom)
+- **Paper size:** 17cm × 24cm 
 - **Margins:**
   - Left/Right: 1.4cm
   - Top: 2cm
@@ -302,7 +298,6 @@ titlepage/
 ├── README.md                  # This file
 ├── titlepage.tex              # Example usage document
 ├── logo.eps                   # University logo (EPS format)
-└── logo-eps-converted-to.pdf  # University logo (PDF format)
 ```
 
 ### With Local Fonts (Optional Fallback)
@@ -312,7 +307,6 @@ titlepage/
 ├── README.md                  # This file
 ├── titlepage.tex              # Example usage document
 ├── logo.eps                   # University logo (EPS format)
-├── logo-eps-converted-to.pdf  # University logo (PDF format)
 └── fonts/                     # Optional: only if Georgia not in system fonts
     ├── Georgia-Regular.ttf
     ├── Georgia-Italic.ttf
@@ -329,53 +323,6 @@ titlepage/
 \RuGsupervisor{Prof. Dr. Second Supervisor}
 \RuGsupervisor{Prof. Dr. Third Supervisor}
 ```
-
-### Optional Sections
-
-Sections are automatically hidden if no members are added. For example, if you don't have co-supervisors:
-
-```latex
-% Don't call \RuGcosupervisor at all
-\RuGsupervisor{Prof. Dr. Main Supervisor}
-\RuGassessor{Prof. Dr. Committee Member}
-
-\makeRuGcommittee  % Will only show Supervisors and Assessment Committee
-```
-
-### Custom Spacing
-
-To add extra space between title page and committee page:
-
-```latex
-\makeRuGtitlepage
-
-\newpage
-\vspace{2cm}  % Add extra space at top
-
-\makeRuGcommittee
-```
-
-## Technical Details
-
-### Package Architecture
-
-The package uses a declarative configuration pattern:
-1. User calls setter commands to configure data (e.g., `\RuGtitle`, `\RuGsupervisor`)
-2. Each setter defines an internal command prefixed with `@`
-3. Generation commands (`\makeRuGtitlepage`, `\makeRuGcommittee`) assemble the configured elements
-
-### Committee Member Implementation
-
-Committee members are managed using **etoolbox's list commands**:
-- `\listadd` - Accumulates members into lists
-- `\dolistloop` - Iterates through lists for printing
-- `\ifdefempty` - Conditionally renders sections
-
-This approach:
-- Handles any number of members
-- Avoids trailing separators
-- Efficiently manages memory
-- Provides clean, maintainable code
 
 ## Error Messages and Warnings
 
@@ -415,12 +362,7 @@ latexmk -xelatex yourfile.tex
 
 **Error:** `! LaTeX Error: File 'logo.eps' not found.`
 
-**Solution:** Ensure `logo.eps` is in the same directory as your `.tex` file, or provide the full path:
-
-```latex
-% In RuGtitlepage.sty, line 175, change:
-\includegraphics[width=6cm]{/path/to/logo.eps}
-```
+**Solution:** Ensure `logo.eps` is in the same directory as your `.tex` file.
 
 ### Font Not Found
 
@@ -491,14 +433,6 @@ Package RuGtitlepage Info: Georgia font loaded from ./fonts/ directory
 \RuGsupervisor{Prof. Dr. Name}  % Add this before \makeRuGcommittee
 ```
 
-## Version History
-
-### Current Version
-- Dynamic committee member management
-- Improved code documentation
-- XeTeX compatibility with fallback support
-- Automated defense date formatting
-
 ## License
 
 This package is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
@@ -509,4 +443,3 @@ This package is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for
 - The University of Groningen logo and branding remain property of the university
 - The Georgia font is a Microsoft trademark and subject to Microsoft's licensing terms
 - This package does not distribute Georgia font files - users must obtain them separately
-
