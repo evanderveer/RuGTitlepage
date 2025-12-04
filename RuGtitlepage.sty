@@ -21,14 +21,97 @@
 % =============================================================================
 \ifXeTeX
     \usepackage{fontspec}
-    \setmainfont{Georgia}[
-        Path=./fonts/,
-        Extension=.ttf,
-        UprightFont=*-Regular,
-        ItalicFont=*-Italic,
-        BoldFont=*-Bold,
-        BoldItalicFont=*-BoldItalic
-    ]
+
+    % Try to load Georgia font from system fonts
+    % fontspec will automatically search system font directories
+    \IfFontExistsTF{Georgia}{%
+        % Georgia found in system fonts - use it directly
+        \setmainfont{Georgia}
+        \PackageInfo{RuGtitlepage}{%
+            Georgia font loaded from system fonts
+        }
+    }{%
+        % Georgia not in system fonts - check local fonts/ directory
+        \IfFileExists{./fonts/Georgia-Regular.ttf}{%
+            % Check all font files in local directory
+            \IfFileExists{./fonts/Georgia-Italic.ttf}{%
+                \IfFileExists{./fonts/Georgia-Bold.ttf}{%
+                    \IfFileExists{./fonts/Georgia-BoldItalic.ttf}{%
+                        % All fonts found locally - load them
+                        \setmainfont{Georgia}[
+                            Path=./fonts/,
+                            Extension=.ttf,
+                            UprightFont=*-Regular,
+                            ItalicFont=*-Italic,
+                            BoldFont=*-Bold,
+                            BoldItalicFont=*-BoldItalic
+                        ]
+                        \PackageInfo{RuGtitlepage}{%
+                            Georgia font loaded from ./fonts/ directory
+                        }
+                    }{%
+                        \PackageError{RuGtitlepage}{%
+                            Georgia-BoldItalic.ttf not found\MessageBreak
+                            Searched locations:\MessageBreak
+                            - System fonts (not found)\MessageBreak
+                            - ./fonts/ directory (incomplete)
+                        }{%
+                            Georgia font is required but not available.\MessageBreak
+                            Install Georgia on your system or place font files in ./fonts/
+                        }
+                    }
+                }{%
+                    \PackageError{RuGtitlepage}{%
+                        Georgia-Bold.ttf not found\MessageBreak
+                        Searched locations:\MessageBreak
+                        - System fonts (not found)\MessageBreak
+                        - ./fonts/ directory (incomplete)
+                    }{%
+                        Georgia font is required but not available.\MessageBreak
+                        Install Georgia on your system or place font files in ./fonts/
+                    }
+                }
+            }{%
+                \PackageError{RuGtitlepage}{%
+                    Georgia-Italic.ttf not found\MessageBreak
+                    Searched locations:\MessageBreak
+                    - System fonts (not found)\MessageBreak
+                    - ./fonts/ directory (incomplete)
+                }{%
+                    Georgia font is required but not available.\MessageBreak
+                    Install Georgia on your system or place font files in ./fonts/
+                }
+            }
+        }{%
+            \PackageError{RuGtitlepage}{%
+                Georgia font not found\MessageBreak
+                Searched locations:\MessageBreak
+                - System fonts (not found)\MessageBreak
+                - ./fonts/ directory (not found)\MessageBreak
+                \MessageBreak
+                On Windows: C:/Windows/Fonts/\MessageBreak
+                On macOS: /Library/Fonts/ or ~/Library/Fonts/\MessageBreak
+                On Linux: /usr/share/fonts/ or ~/.fonts/
+            }{%
+                Georgia font is required but not available.\MessageBreak
+                Option 1: Install Georgia system-wide (recommended)\MessageBreak
+                Option 2: Place Georgia .ttf files in ./fonts/ directory\MessageBreak
+                \MessageBreak
+                Required files:\MessageBreak
+                - Georgia-Regular.ttf (or georgia.ttf)\MessageBreak
+                - Georgia-Italic.ttf (or georgiai.ttf)\MessageBreak
+                - Georgia-Bold.ttf (or georgiab.ttf)\MessageBreak
+                - Georgia-BoldItalic.ttf (or georgiaz.ttf)
+            }
+        }
+    }
+\else
+    \PackageWarning{RuGtitlepage}{%
+        You are not using XeLaTeX.\MessageBreak
+        The Georgia font will NOT be loaded.\MessageBreak
+        For correct formatting, compile with XeLaTeX:\MessageBreak
+        latexmk -xelatex yourfile.tex
+    }
 \fi
 
 % =============================================================================

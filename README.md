@@ -11,6 +11,8 @@ A LaTeX package for generating PhD thesis title pages formatted according to Uni
 - Conditional rendering of sections (only shows sections with content)
 - Georgia font family integration for formal academic appearance
 - XeLaTeX required for correct font rendering (pdfLaTeX fallback for testing only)
+- **Automatic system font detection** - uses Georgia from system fonts if available
+- Helpful error messages when fonts are missing
 
 ## Requirements
 
@@ -25,7 +27,15 @@ A LaTeX package for generating PhD thesis title pages formatted according to Uni
 
 ### Files Required
 - `logo.eps` or `logo.pdf` - University of Groningen logo
-- `fonts/` directory containing Georgia font family:
+
+### Fonts Required
+- **Georgia font family** (automatically detected from system or local directory)
+
+  The package will search for Georgia fonts in this order:
+  1. **System fonts** (recommended) - Windows, macOS, or Linux font directories
+  2. **Local `./fonts/` directory** (fallback) - for custom installations
+
+  If using local fonts, place these files in `./fonts/`:
   - `Georgia-Regular.ttf`
   - `Georgia-Italic.ttf`
   - `Georgia-Bold.ttf`
@@ -37,13 +47,40 @@ A LaTeX package for generating PhD thesis title pages formatted according to Uni
 
 ## Installation
 
-1. Place `RuGtitlepage.sty` in your thesis directory
-2. Ensure `logo.eps` and `fonts/` directory are in the same location
-3. Include the package in your LaTeX document:
+### Option 1: Using System Fonts (Recommended)
 
-```latex
-\usepackage{RuGtitlepage}
-```
+1. **Ensure Georgia font is installed on your system**
+   - **Windows**: Georgia is typically pre-installed with Windows
+   - **macOS**: Georgia may be installed, or install it from Font Book
+   - **Linux**: Install the `ttf-mscorefonts-installer` package
+
+2. Place `RuGtitlepage.sty` and `logo.eps` in your thesis directory
+
+3. Include the package in your LaTeX document:
+   ```latex
+   \usepackage{RuGtitlepage}
+   ```
+
+The package will automatically detect and use the Georgia font from your system.
+
+### Option 2: Using Local Fonts (Fallback)
+
+If Georgia is not available system-wide, or you need a specific version:
+
+1. Place `RuGtitlepage.sty` in your thesis directory
+2. Create a `fonts/` subdirectory
+3. Copy Georgia font files to `fonts/`:
+   - `Georgia-Regular.ttf`
+   - `Georgia-Italic.ttf`
+   - `Georgia-Bold.ttf`
+   - `Georgia-BoldItalic.ttf`
+4. Ensure `logo.eps` is in your thesis directory
+5. Include the package:
+   ```latex
+   \usepackage{RuGtitlepage}
+   ```
+
+The package will automatically fall back to the local fonts if system fonts aren't found.
 
 ## Usage
 
@@ -258,6 +295,17 @@ The title page uses fixed-height minipages for consistent spacing:
 
 ## File Structure
 
+### Minimal Installation (Using System Fonts)
+```
+titlepage/
+├── RuGtitlepage.sty          # Main package file
+├── README.md                  # This file
+├── titlepage.tex              # Example usage document
+├── logo.eps                   # University logo (EPS format)
+└── logo-eps-converted-to.pdf  # University logo (PDF format)
+```
+
+### With Local Fonts (Optional Fallback)
 ```
 titlepage/
 ├── RuGtitlepage.sty          # Main package file
@@ -265,7 +313,7 @@ titlepage/
 ├── titlepage.tex              # Example usage document
 ├── logo.eps                   # University logo (EPS format)
 ├── logo-eps-converted-to.pdf  # University logo (PDF format)
-└── fonts/
+└── fonts/                     # Optional: only if Georgia not in system fonts
     ├── Georgia-Regular.ttf
     ├── Georgia-Italic.ttf
     ├── Georgia-Bold.ttf
@@ -329,6 +377,38 @@ This approach:
 - Efficiently manages memory
 - Provides clean, maintainable code
 
+## Error Messages and Warnings
+
+### Package Errors
+
+The package provides clear error messages for common issues:
+
+#### Missing Font Files
+If Georgia font is not available on your system or in the local directory, you'll see:
+```
+! Package RuGtitlepage Error: Georgia font not found
+Searched locations:
+- System fonts (not found)
+- ./fonts/ directory (not found)
+
+On Windows: C:/Windows/Fonts/
+On macOS: /Library/Fonts/ or ~/Library/Fonts/
+On Linux: /usr/share/fonts/ or ~/.fonts/
+```
+
+The package searches system fonts first, then falls back to checking the local `./fonts/` directory.
+
+#### Wrong TeX Engine
+If you compile with pdfLaTeX instead of XeLaTeX, you'll see a warning:
+```
+Package RuGtitlepage Warning: You are not using XeLaTeX.
+The Georgia font will NOT be loaded.
+For correct formatting, compile with XeLaTeX:
+latexmk -xelatex yourfile.tex
+```
+
+**Note:** This is a warning, not an error. Compilation will continue but with incorrect fonts.
+
 ## Troubleshooting
 
 ### Logo Not Found
@@ -344,19 +424,54 @@ This approach:
 
 ### Font Not Found
 
-**Error:** `! fontspec error: "font-not-found"`
-
-**Solution:**
-1. Ensure you are compiling with **XeLaTeX** (not pdfLaTeX)
-2. Verify the `fonts/` directory exists with all Georgia font files
-3. Check the relative path in `RuGtitlepage.sty` (line 24-31)
-4. Consider using system fonts instead:
-
-```latex
-\setmainfont{Georgia}  % Uses system Georgia font
+**Error:**
+```
+! Package RuGtitlepage Error: Georgia font not found
 ```
 
-**Important:** The Georgia font is only loaded when using XeLaTeX. If you compile with pdfLaTeX, the default Computer Modern font will be used instead, which is incorrect for final submissions.
+**Solution:**
+
+**Recommended: Install Georgia system-wide**
+
+1. **Windows**:
+   - Georgia is typically pre-installed
+   - If missing, obtain from Windows installation media or Microsoft Office
+   - Install to `C:/Windows/Fonts/`
+
+2. **macOS**:
+   - Open Font Book
+   - Install Georgia font family
+   - Fonts should be in `/Library/Fonts/` or `~/Library/Fonts/`
+
+3. **Linux**:
+   ```bash
+   sudo apt-get install ttf-mscorefonts-installer
+   ```
+   Or manually install to `~/.fonts/` or `/usr/share/fonts/`
+
+**Alternative: Use local fonts directory**
+
+1. Create `./fonts/` directory in your thesis folder
+2. Copy Georgia font files to `./fonts/`:
+   - `Georgia-Regular.ttf`
+   - `Georgia-Italic.ttf`
+   - `Georgia-Bold.ttf`
+   - `Georgia-BoldItalic.ttf`
+
+**Font Search Order:**
+The package automatically searches:
+1. System fonts (via fontspec's automatic detection)
+2. Local `./fonts/` directory (manual fallback)
+
+If Georgia is found in system fonts, you'll see:
+```
+Package RuGtitlepage Info: Georgia font loaded from system fonts
+```
+
+If loaded from local directory:
+```
+Package RuGtitlepage Info: Georgia font loaded from ./fonts/ directory
+```
 
 ### Defense Date Format Issues
 

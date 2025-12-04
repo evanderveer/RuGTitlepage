@@ -1,3 +1,4 @@
+# LaTeX auxiliary files
 *.aux*
 *.bbl*
 *.bcf*
@@ -16,6 +17,15 @@
 *.toc*
 *.xdv*
 *synctex*
+
+# System files
 */Thumbs.db
 .claude
+
+# Generated output
 titlepage.pdf
+
+# Font files (optional - exclude to avoid license issues)
+# Uncomment the line below if you want to exclude local fonts
+# Users should have Georgia installed system-wide instead
+# fonts/
