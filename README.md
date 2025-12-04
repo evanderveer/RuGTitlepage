@@ -501,12 +501,12 @@ Package RuGtitlepage Info: Georgia font loaded from ./fonts/ directory
 
 ## License
 
-This package is provided for use with University of Groningen PhD theses. Please ensure compliance with university regulations and branding guidelines.
+This package is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
 
-## Credits
+**Important:** This code is provided "as is" without warranty of any kind. It will not be actively maintained or updated in the future. Users are free to fork and modify the code for their own needs.
 
-Developed for the University of Groningen PhD thesis requirements.
+**Note:** While the LaTeX code is MIT licensed, please be aware that:
+- The University of Groningen logo and branding remain property of the university
+- The Georgia font is a Microsoft trademark and subject to Microsoft's licensing terms
+- This package does not distribute Georgia font files - users must obtain them separately
 
-## Contact
-
-For issues, questions, or contributions, please contact your thesis supervisor or the university's thesis office.
